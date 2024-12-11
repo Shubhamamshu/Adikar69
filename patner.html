@@ -209,18 +209,7 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
 
             if (userInfo.picture) {
                 document.getElementById('user-picture').src = userInfo.picture;
-                  
-            }
-        } else {
-            // Redirect back to login if no token is found
-            alert("No token found! Redirecting to login.");
-             // Redirect to the partner page
-            window.location.href = `index.html`;
-        }
-           
-
-
-        // Save user to Firestore
+                        // Save user to Firestore
         db.collection("users")
             .doc(userInfo.sub)
             .set({
@@ -235,6 +224,18 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
             .catch((error) => {
                 console.error("Error saving user to Firestore:", error);
             });
+                  
+            }
+        } else {
+            // Redirect back to login if no token is found
+            alert("No token found! Redirecting to login.");
+             // Redirect to the partner page
+            window.location.href = `index.html`;
+        }
+           
+
+
+
 
     </script>
     
