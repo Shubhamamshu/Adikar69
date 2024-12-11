@@ -247,8 +247,16 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
         }).catch((error) => {
             console.error("Error checking user in Firestore:", error);
         });
+
+        } else {
+            // Redirect back to login if no token is found
+            alert("No token found! Redirecting to login.");
+             // Redirect to the partner page
+            window.location.href = `index.html`;
+        }
+           
              // Function to upload user data to Firestore
-        function uploadUserData(userInfo) {
+             function uploadUserData(userInfo) {
             userDocRef.set({
                 name: userInfo.name,
                 email: userInfo.email,
@@ -265,15 +273,7 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
             .catch((error) => {
                 console.error("Error uploading user data to Firestore:", error);
             });
-        } else {
-            // Redirect back to login if no token is found
-            alert("No token found! Redirecting to login.");
-             // Redirect to the partner page
-            window.location.href = `index.html`;
         }
-           
-
-
 
 
     </script>
