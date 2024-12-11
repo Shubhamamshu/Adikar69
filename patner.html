@@ -185,8 +185,7 @@ const firebaseConfig = {
 // Initialize Cloud Firestore and get a reference to the service
     const db = firebase.firestore();
 
-        
-        function parseJwt(token) {
+    function parseJwt(token) {
             const base64Url = token.split('.')[1]; // Get the payload
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
