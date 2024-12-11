@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-      <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to ADIKAR</title>
@@ -191,6 +191,7 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
 
             if (userInfo.picture) {
                 document.getElementById('user-picture').src = userInfo.picture;
+                  
             }
         } else {
             // Redirect back to login if no token is found
@@ -214,7 +215,8 @@ const firebaseConfig = {
 
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
         async function saveUserToDatabase(userInfo) {
     await setDoc(doc(db, "users", userInfo.sub), {
         name: userInfo.name,
