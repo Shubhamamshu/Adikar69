@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to ADIKAR</title>
@@ -44,22 +46,7 @@
             animation: bounce 1.5s ease-in-out;
         }
 
-        .login-button {
-            display: inline-block;
-            background: linear-gradient(to right, #FF6F91, #FFC1E3); /* Gradient pink button */
-            color: white;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .login-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 111, 145, 0.4);
-        }
+        
 
         .emoji {
             margin-left: 5px;
@@ -101,7 +88,62 @@
         <div class="heart">❤</div>
         <h1>Welcome to ADIKAR</h1>
         <p>JOIN ADIKAR AND LET'S CREATE MOMENTS TOGETHER <span class="emoji">💞</span></p>
-        <a href="patner.html" class="login-button">LOGIN</a>
+        <div id="g_id_onload"
+     data-client_id="260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com"
+     data-login_uri="https://enoughkaran69.github.io/Adikar69/patner.html"
+     data-auto_prompt="false">
+</div>
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="sign_in_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
+
+
     </div>
 </body>
+<script>
+function handleCredentialResponse(response) {
+        if (response.credential) {
+            console.log("Encoded JWT ID token: " + response.credential);
+
+            // Save token in localStorage (or sessionStorage/cookies)
+            localStorage.setItem('google_token', response.credential);
+
+            // Redirect to the partner page
+            window.location.href = `patner.html?token=${response.credential}`;
+        } else {
+            console.error("Sign-In failed. No credential received.");
+        }
+    }
+
+    function checkLoginStatus() {
+        // Check if the user is already logged in
+        const token = localStorage.getItem('google_token');
+        if (token) {
+            // User is already logged in, redirect them
+            window.location.href = `patner.html?token=${token}`;
+        }
+    }
+
+  
+    window.onload = function() {
+      google.accounts.id.initialize({
+        client_id: "260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.querySelector(".g_id_signin"), // Specify the container
+        { theme: "outline", size: "large" }    // Customize button style
+      );
+                // Check login status on page load
+        checkLoginStatus();
+
+      google.accounts.id.prompt(); // Optional: Show the One Tap prompt
+    };
+  </script>
+  
 </html>
