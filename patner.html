@@ -226,6 +226,45 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
             });
                   
             }
+              // Check if user exists in Firestore
+        const userDocRef = db.collection("users").doc(userInfo.sub);
+        userDocRef.get().then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+
+                // Check if user contains "currentpfp"
+                if (userData.currentpfp) {
+                    console.log("User has currentpfp. Redirecting to main.index...");
+                    window.location.href = "main.index";
+                } else {
+                    console.log("User exists but no currentpfp. Redirecting to upload data...");
+                    uploadUserData(userInfo);
+                }
+            } else {
+                console.log("User does not exist. Uploading user data...");
+                uploadUserData(userInfo);
+            }
+        }).catch((error) => {
+            console.error("Error checking user in Firestore:", error);
+        });
+             // Function to upload user data to Firestore
+        function uploadUserData(userInfo) {
+            userDocRef.set({
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+                id: userInfo.sub,
+                currentpfp: userInfo.picture || null // Add currentpfp if available
+            })
+            .then(() => {
+                console.log("User data uploaded to Firestore!");
+                alert("User data successfully uploaded!");
+                // Redirect to main.index after upload
+                window.location.href = "main.index";
+            })
+            .catch((error) => {
+                console.error("Error uploading user data to Firestore:", error);
+            });
         } else {
             // Redirect back to login if no token is found
             alert("No token found! Redirecting to login.");
