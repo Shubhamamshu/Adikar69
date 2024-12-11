@@ -235,10 +235,6 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
             .catch((error) => {
                 console.error("Error saving user to Firestore:", error);
             });
-    } else {
-        alert("No token found! Redirecting to login.");
-        window.location.href = "main.html";
-    }
 
     </script>
     
