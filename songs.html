@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Adikar</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ff8db9; /* Pink background */
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .heart {
+            width: 50px;
+            height: 50px;
+            background-color: #2d8273; /* Green heart color */
+            clip-path: polygon(
+                50% 0%,
+                100% 35%,
+                82% 100%,
+                50% 75%,
+                18% 100%,
+                0% 35%
+            );
+        }
+
+        .text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart"></div>
+        <div class="text">ADIKAR</div>
+    </div>
+</body>
+</html>

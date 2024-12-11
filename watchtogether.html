@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Together</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      box-sizing: border-box;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      margin: 10px;
+      color: #444;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 90%;
+      max-width: 400px;
+      margin-bottom: 15px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #ff6f61;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      margin: 5px;
+      background: linear-gradient(135deg, #ff6f61, #d45079);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    #player {
+      width: 90%;
+      max-width: 400px;
+      height: 200px;
+      margin: 15px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #dummy-options {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .dummy-option {
+      padding: 10px;
+      flex: 1;
+      text-align: center;
+      background: linear-gradient(135deg, #d45079, #ff6f61);
+      color: white;
+      font-size: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background 0.3s ease;
+    }
+
+    .dummy-option:hover {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      input[type="text"] {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      button {
+        font-size: 12px;
+        padding: 8px 16px;
+      }
+
+      #player {
+        height: 180px;
+      }
+
+      .dummy-option {
+        font-size: 10px;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Watch Together</h1>
+  <input type="text" id="videoIdInput" placeholder="Enter YouTube Video ID or URL">
+  <button onclick="loadVideo()">Load Video</button>
+  <div id="player"></div>
+
+  <div id="dummy-options">
+    <div class="dummy-option" onclick="playVideo()">Play</div>
+    <div class="dummy-option" onclick="pauseVideo()">Pause</div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '200',
+        width: '400',
+        videoId: '',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      console.log('Player is ready');
+    }
+
+    function onPlayerStateChange(event) {
+      console.log('Player state changed:', event.data);
+    }
+
+    function loadVideo() {
+      const videoIdInput = document.getElementById('videoIdInput').value;
+      const videoId = extractVideoId(videoIdInput);
+      if (videoId) {
+        player.loadVideoById(videoId);
+        database.ref('video').set(videoId);
+      } else {
+        alert('Invalid YouTube URL or Video ID');
+      }
+    }
+
+    function extractVideoId(urlOrId) {
+      const urlPattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const match = urlOrId.match(urlPattern);
+      return match ? match[1] : (urlOrId.length === 11 ? urlOrId : null);
+    }
+
+    function playVideo() {
+      if (player) {
+        player.playVideo();
+      } else {
+        alert('Video player not ready');
+      }
+    }
+
+    function pauseVideo() {
+      if (player) {
+        player.pauseVideo();
+      } else {
+        alert('Video player not ready');
+      }
+    }
+  </script>
+</body>
+</html>

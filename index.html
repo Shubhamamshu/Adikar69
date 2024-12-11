@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to ADIKAR</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(to bottom right, #FFDEE9, #B5FFFC); /* Soft pink and blue gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            width: 350px;
+            border-radius: 20px;
+            padding: 30px;
+            background: white;
+            color: #333;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #FF6F91; /* Love-themed pink */
+            font-family: 'Georgia', serif;
+            animation: slideIn 1s ease-out;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            color: #555;
+            font-family: 'Arial', sans-serif;
+            animation: bounce 1.5s ease-in-out;
+        }
+
+        .login-button {
+            display: inline-block;
+            background: linear-gradient(to right, #FF6F91, #FFC1E3); /* Gradient pink button */
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 111, 145, 0.4);
+        }
+
+        .emoji {
+            margin-left: 5px;
+        }
+
+        .heart {
+            font-size: 60px;
+            color: #FF6F91;
+            margin-bottom: 15px;
+            animation: heartBeat 1.5s infinite alternate;
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(10px); opacity: 0; }
+            50% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart">❤</div>
+        <h1>Welcome to ADIKAR</h1>
+        <p>JOIN ADIKAR AND LET'S CREATE MOMENTS TOGETHER <span class="emoji">💞</span></p>
+        <a href="patner.html" class="login-button">LOGIN</a>
+    </div>
+</body>
+</html>

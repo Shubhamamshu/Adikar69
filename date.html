@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Event</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.5/dist/tailwind.min.css" rel="stylesheet"/>
+</head>
+<body class="w-[375px] min-h-[762px] mx-auto bg-gradient-to-b from-[#E6D5F7] via-[#C5A6E8] to-[#9B7BC7]">
+  <main class="h-full p-6 space-y-6">
+    <div class="bg-white/50 rounded-lg p-6 shadow-md">
+      <h1 class="text-lg font-bold text-gray-800 mb-4">Add New Event</h1>
+      <form id="eventForm" class="space-y-4">
+        <!-- Event Title -->
+        <div>
+          <label for="eventTitle" class="block text-sm font-medium text-gray-700">Event Title</label>
+          <input type="text" id="eventTitle" class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="Enter event title" required />
+        </div>
+        <!-- Event Description -->
+        <div>
+          <label for="eventDescription" class="block text-sm font-medium text-gray-700">Event Description</label>
+          <textarea id="eventDescription" rows="3" class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="Enter event description" required></textarea>
+        </div>
+        <!-- Event Date -->
+        <div>
+          <label for="eventDate" class="block text-sm font-medium text-gray-700">Event Date</label>
+          <input type="date" id="eventDate" class="w-full mt-1 p-2 border rounded-lg focus:ring-2 focus:ring-purple-500" required />
+        </div>
+        <!-- Save Button -->
+        <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-lg shadow-md hover:bg-purple-700">
+          Save Event
+        </button>
+      </form>
+    </div>
+    <!-- Saved Events -->
+    <div class="bg-white/50 rounded-lg p-6 shadow-md">
+      <h2 class="text-lg font-bold text-gray-800 mb-4">Saved Events</h2>
+      <ul id="eventList" class="space-y-2 text-gray-700"></ul>
+    </div>
+  </main>
+  <script>
+    // JavaScript to handle form submission and save events
+    document.getElementById('eventForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Get form data
+      const title = document.getElementById('eventTitle').value;
+      const description = document.getElementById('eventDescription').value;
+      const date = document.getElementById('eventDate').value;
+
+      // Create a new list item for the event
+      const eventList = document.getElementById('eventList');
+      const listItem = document.createElement('li');
+      listItem.className = "p-2 bg-white rounded-lg shadow-sm";
+      listItem.innerHTML = `
+        <h3 class="font-medium text-gray-800">${title}</h3>
+        <p class="text-sm text-gray-600">${description}</p>
+        <p class="text-sm text-gray-500">Date: ${date}</p>
+      `;
+
+      // Add the new event to the list
+      eventList.appendChild(listItem);
+
+      // Clear form fields
+      document.getElementById('eventForm').reset();
+    });
+  </script>
+</body>
+</html>

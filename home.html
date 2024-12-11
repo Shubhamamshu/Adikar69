@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Together App</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body {
+      background: linear-gradient(to bottom, #FFE6F7, #E6E6FF);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .outer-container {
+      width: 100%;
+      max-width: 375px; /* Phone size */
+      background: linear-gradient(to right, #ffafcc, #cdb4db, #bde0fe);
+      border-radius: 1.5rem;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end; /* Adjust so the message box is at the bottom */
+      height: 600px; /* Smaller height to fit better */
+    }
+
+    /* Profile Section */
+    .profile-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      position: relative;
+    }
+
+    .profile-image .status {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 0.75rem;
+      height: 0.75rem;
+      background: #4caf50;
+      border: 2px solid #fff;
+      border-radius: 50%;
+    }
+
+    .text-lg {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    /* Song Section */
+    .song-section {
+      background: linear-gradient(to right, #a78bfa, #f472b6);
+      color: white;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .song-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .song-icon {
+      width: 3rem;
+      height: 3rem;
+      background: linear-gradient(to right, #60a5fa, #818cf8);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .song-title {
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      height: 0.5rem;
+      background: linear-gradient(to right, #60a5fa, #818cf8);
+      border-radius: 9999px;
+      margin-top: 0.5rem;
+    }
+
+    .play-button {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: linear-gradient(to right, #60a5fa, #818cf8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Button Group */
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .button-group button {
+      background: linear-gradient(to right, #34d399, #10b981);
+      color: white;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    /* Watch Together Button */
+    .watch-button {
+      width: 100%;
+      background: linear-gradient(to right, #6d28d9, #7c3aed);
+      color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    /* Message Box */
+    .message-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .message-box input {
+      flex: 1;
+      border: 1px solid #d1d5db;
+      background: #f3f4f6;
+      border-radius: 9999px;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .message-box button {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: linear-gradient(to right, #f472b6, #a78bfa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ChitChat Container */
+    .chitchat-container {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 1rem;
+      background: #f9f9f9;
+      flex-grow: 1;
+    }
+
+    .chitchat-message {
+      margin-bottom: 1rem;
+    }
+
+    .chitchat-message .message {
+      background: #f3f4f6;
+      padding: 0.75rem;
+      border-radius: 1rem;
+      display: inline-block;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+
+    /* Chat Header */
+    .chitchat-header {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .chitchat-header h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="outer-container">
+    <main>
+      <!-- Profile Section -->
+      <div class="profile-section">
+        <div class="relative">
+          <img src="adikar male.jpg" alt="Profile 1" class="profile-image">
+          <div class="status"></div>
+        </div>
+        <div class="text-lg">YOU ARE IN LOVE ❤️ WITH</div>
+        <div class="relative">
+          <img src="adikar female.jpg" alt="Profile 2" class="profile-image">
+          <div class="status"></div>
+        </div>
+      </div>
+
+      <!-- Song Section -->
+      <div class="song-section">
+        <div class="song-content">
+          <div class="song-icon">
+            <i class="fas fa-music text-white text-xl"></i>
+          </div>
+          <div class="flex-1">
+            <div id="song-title" class="song-title">No Song Selected</div>
+            <div id="song-artist" class="song-title">No Artist</div>
+            <div class="progress-bar"></div>
+          </div>
+        </div>
+        <button class="play-button" id="play-button">
+          <i class="fas fa-play text-white" id="play-icon"></i>
+        </button>
+      </div>
+
+      <!-- Button Links -->
+      <div class="button-group">
+        <button onclick="redirectTo('events.html')">
+          <i class="fas fa-calendar-alt"></i>EVENTS
+        </button>
+        <button onclick="redirectTo('songs.html')">
+          <i class="fas fa-music"></i>SONGS
+        </button>
+        <button onclick="redirectTo('annoy.html')">
+          <i class="fas fa-heart"></i>ANNOY
+        </button>
+      </div>
+
+      <!-- Watch Together Button -->
+      <button onclick="redirectTo('watchtogether.html')" class="watch-button">
+        <i class="fas fa-play-circle"></i>WATCH TOGETHER
+      </button>
+    </main>
+
+    <!-- ChitChat Container -->
+    <div class="chitchat-container" id="chitchat-container">
+      <!-- Chat Header -->
+      <div class="chitchat-header">
+        <h1>Chitchat</h1>
+      </div>
+      <!-- Messages will appear here -->
+    </div>
+
+    <!-- Message Box -->
+    <div class="message-box">
+      <button onclick="document.getElementById('image-input').click()">
+        <i class="fas fa-plus text-gray-600"></i>
+      </button>
+      <input type="text" id="message-input" placeholder="Type your message...">
+      <input type="file" id="image-input" accept="image/*" style="display: none;">
+      <button onclick="sendMessage()">
+        <i class="fas fa-paper-plane text-white"></i>
+      </button>
+    </div>
+  </div>
+
+  <audio id="audio-player" hidden>
+    <source id="audio-source" src="" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    let audio = document.getElementById("audio-player");
+    let playButton = document.getElementById("play-button");
+    let playIcon = document.getElementById("play-icon");
+    let songTitle = document.getElementById("song-title");
+    let songArtist = document.getElementById("song-artist");
+
+    // Play and pause functionality
+    playButton.addEventListener("click", function () {
+      if (audio.paused) {
+        audio.play();
+        playIcon.classList.remove("fa-play");
+        playIcon.classList.add("fa-pause");
+      } else {
+        audio.pause();
+        playIcon.classList.remove("fa-pause");
+        playIcon.classList.add("fa-play");
+      }
+    });
+
+    // Fetch song data from localStorage and update the song info
+    window.onload = function() {
+      let songName = localStorage.getItem("songName");
+      let songArtistName = localStorage.getItem("songArtist");
+      let songUrl = localStorage.getItem("songUrl");
+
+      if (songName && songArtistName && songUrl) {
+        songTitle.textContent = songName;
+        songArtist.textContent = songArtistName;
+        audio.src = songUrl;
+      }
+    };
+
+    // Redirect function
+    function redirectTo(page) {
+      window.location.href = page;
+    }
+
+    // Send message function
+    function sendMessage() {
+      let messageInput = document.getElementById("message-input");
+      let imageInput = document.getElementById("image-input");
+      let messageContainer = document.getElementById("chitchat-container");
+
+      let messageText = messageInput.value;
+      let imageFile = imageInput.files[0];
+
+      let messageDiv = document.createElement("div");
+      messageDiv.classList.add("chitchat-message");
+
+      if (messageText) {
+        let message = document.createElement("div");
+        message.classList.add("message");
+        message.textContent = messageText;
+        messageDiv.appendChild(message);
+      }
+
+      if (imageFile) {
+        let image = document.createElement("img");
+        image.src = URL.createObjectURL(imageFile);
+        image.style.width = "200px";
+        image.style.marginTop = "10px";
+        messageDiv.appendChild(image);
+      }
+
+      messageContainer.appendChild(messageDiv);
+      messageInput.value = "";  // Clear input
+      imageInput.value = "";    // Clear image input
+      messageContainer.scrollTop = messageContainer.scrollHeight;  // Auto scroll to bottom
+    }
+  </script>
+</body>
+</html>
