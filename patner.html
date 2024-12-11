@@ -167,6 +167,25 @@
     </div>
 </body>
     <script>
+
+            // Configuration for Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCXtmiQ1Uf5Did8BKVJov3KKj9XdOQhW2c",
+  authDomain: "talk-to-13b66.firebaseapp.com",
+  databaseURL: "https://talk-to-13b66-default-rtdb.firebaseio.com",
+  projectId: "talk-to-13b66",
+  storageBucket: "talk-to-13b66.firebasestorage.app",
+  messagingSenderId: "925074718284",
+  appId: "1:925074718284:web:1a65224802c4e3db96bee9",
+  measurementId: "G-6X72JLJ6PR"
+};
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+// Initialize Cloud Firestore and get a reference to the service
+    const db = firebase.firestore();
+
+        
         function parseJwt(token) {
             const base64Url = token.split('.')[1]; // Get the payload
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -201,31 +220,26 @@ const token = urlParams.get('token') || localStorage.getItem('google_token');
         }
            
 
-    // Configuration for Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyCXtmiQ1Uf5Did8BKVJov3KKj9XdOQhW2c",
-  authDomain: "talk-to-13b66.firebaseapp.com",
-  databaseURL: "https://talk-to-13b66-default-rtdb.firebaseio.com",
-  projectId: "talk-to-13b66",
-  storageBucket: "talk-to-13b66.firebasestorage.app",
-  messagingSenderId: "925074718284",
-  appId: "1:925074718284:web:1a65224802c4e3db96bee9",
-  measurementId: "G-6X72JLJ6PR"
-};
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-// Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app);
-        async function saveUserToDatabase(userInfo) {
-    await setDoc(doc(db, "users", userInfo.sub), {
-        name: userInfo.name,
-        email: userInfo.email,
-        picture: userInfo.picture,
-        id: userInfo.sub
-    });
-    console.log("User saved to Adikar!");
-}
+        // Save user to Firestore
+        db.collection("users")
+            .doc(userInfo.sub)
+            .set({
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+                id: userInfo.sub
+            })
+            .then(() => {
+                console.log("User saved to Firestore!");
+            })
+            .catch((error) => {
+                console.error("Error saving user to Firestore:", error);
+            });
+    } else {
+        alert("No token found! Redirecting to login.");
+        window.location.href = "main.html";
+    }
 
     </script>
     
