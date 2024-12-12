@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to ADIKAR</title>
-    
+    <title>User Details - ADIKAR</title>
     <style>
+        /* General Styles */
         body {
             margin: 0;
-            font-family: 'Courier New', Courier, monospace;
-            background: linear-gradient(to bottom right, #FFDEE9, #B5FFFC); /* Soft pink and blue gradient */
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom right, #FF758C, #FF7EB3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,171 +20,113 @@
         }
 
         .container {
-            width: 100%;
-            max-width: 375px;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 30px;
             background: white;
             color: #333;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-            transform: translateY(-10%); /* Moves the content a bit upward */
-            animation: fadeIn 1s ease-out; /* Fade-in effect */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         h1 {
-            font-size: 30px;
-            margin-bottom: 15px;
-            color: #FF6F91; /* Love-themed pink */
-            font-family: 'Georgia', serif;
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #FF4D6D;
+            font-family: 'Dancing Script', cursive;
             animation: slideIn 1s ease-out;
         }
 
         p {
             font-size: 18px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             font-weight: bold;
             color: #555;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Lora', serif;
             animation: fadeInText 1.5s ease-in-out;
         }
 
-        .login-button {
+        .user-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button {
             display: inline-block;
-            background: linear-gradient(to right, #FF6F91, #FFC1E3); /* Gradient pink button */
+            background: linear-gradient(to right, #FF4D6D, #FF758C);
             color: white;
             text-decoration: none;
             padding: 12px 30px;
             border-radius: 30px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 20px;
         }
 
-        .login-button:hover {
+        .button:hover {
             transform: scale(1.1);
             box-shadow: 0 8px 20px rgba(255, 111, 145, 0.4);
-            background: linear-gradient(to right, #FFB6C1, #FF6F91); /* Slightly different gradient */
         }
 
-        .emoji {
-            margin-left: 8px;
-        }
-
-        .heart {
-            font-size: 60px;
-            color: #FF6F91;
-            margin-bottom: 40px;
-            animation: bounce 1.5s infinite;
-        }
-
-        .header-image {
-            max-width: 30%;  /* Resize the image */
-            height: auto;
-            border-radius: 50%;
-            margin-bottom: 20px;
-        }
-
-        /* Bounce effect for the heart */
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-        }
-
-        /* Fade-in effect for the container */
+        /* Keyframe Animations */
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
 
-        /* Slide-in effect for h1 */
         @keyframes slideIn {
             0% { transform: translateY(-20px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
         }
 
-        /* Fade-in effect for p */
         @keyframes fadeInText {
             0% { opacity: 0; transform: translateY(10px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Floating hearts background */
-        .floating-hearts {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://www.transparenttextures.com/patterns/diagonal-hatch-pattern.png');
-            opacity: 0.1;
-            pointer-events: none;
-        }
-
-        /* Responsive Design for smaller screens */
-        @media (max-width: 480px) {
-            .container {
-                padding: 25px;
-                max-width: 90%; /* Ensure it fits on smaller screens */
-                transform: translateY(-5%); /* Adjust position to bring it more into view */
-            }
+        /* Responsive Design */
+        @media (max-width: 600px) {
             h1 {
-                font-size: 24px;
+                font-size: 28px;
             }
-            .login-button {
-                width: 100%;
-                padding: 14px 25px;
+
+            p {
+                font-size: 16px;
             }
-            .heart {
-                font-size: 50px; /* Reduce heart size on smaller screens */
+
+            .container {
+                padding: 20px;
+            }
+
+            .user-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .button {
+                padding: 10px 25px;
+                font-size: 14px;
             }
         }
-
     </style>
 </head>
 <body>
-       
     <div class="container">
-        <div class="floating-hearts"></div>
-        <!-- Image added here, now smaller size -->
-        <img src="adikar-removebg-preview.png" alt="Couple Image" class="header-image">
-
-        <div class="heart">❤</div>
-        <h1>Welcome to ADIKAR</h1>
-         <h1>Welcome, <span id="user-name"></span>!</h1>
-    <img id="user-picture" alt="Profile Picture" style="border-radius: 50%;">
-    <p>Email: <span id="user-email"></span></p>
-    <p>ID: <span id="user-id"></span></p>
-        <p>Let’s build a collection of beautiful moments, one unforgettable memory at a time! <span class="emoji">💞</span></p>
-        <a href="home.html" class="login-button">Add Your Partner</a>
+        <img id="user-picture" alt="User Picture" class="user-image">
+        <h1>Welcome, <span id="user-name"></span>!</h1>
+        <p>Email: <span id="user-email"></span></p>
+        <p>ID: <span id="user-id"></span></p>
+        <a href="home.html" class="button">Continue to Home</a>
     </div>
-</body>
+
     <script>
-
-            // Configuration for Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyCXtmiQ1Uf5Did8BKVJov3KKj9XdOQhW2c",
-  authDomain: "talk-to-13b66.firebaseapp.com",
-  databaseURL: "https://talk-to-13b66-default-rtdb.firebaseio.com",
-  projectId: "talk-to-13b66",
-  storageBucket: "talk-to-13b66.firebasestorage.app",
-  messagingSenderId: "925074718284",
-  appId: "1:925074718284:web:1a65224802c4e3db96bee9",
-  measurementId: "G-6X72JLJ6PR"
-};
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-// Initialize Cloud Firestore and get a reference to the service
-    const db = firebase.firestore();
-
-    function parseJwt(token) {
-            const base64Url = token.split('.')[1]; // Get the payload
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
@@ -194,88 +134,23 @@ const firebaseConfig = {
             return JSON.parse(jsonPayload);
         }
 
-        // Retrieve the token from localStorage or query parameters
-const urlParams = new URLSearchParams(window.location.search);
-const token = urlParams.get('token') || localStorage.getItem('google_token');
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token') || localStorage.getItem('google_token');
 
         if (token) {
-            // Decode the token
             const userInfo = parseJwt(token);
 
-            // Populate user information
             document.getElementById('user-name').textContent = userInfo.name || "User";
             document.getElementById('user-email').textContent = userInfo.email || "N/A";
             document.getElementById('user-id').textContent = userInfo.sub || "N/A";
 
             if (userInfo.picture) {
                 document.getElementById('user-picture').src = userInfo.picture;
-                        // Save user to Firestore
-        db.collection("users")
-            .doc(userInfo.sub)
-            .set({
-                name: userInfo.name,
-                email: userInfo.email,
-                picture: userInfo.picture,
-                id: userInfo.sub
-            })
-            .then(() => {
-                console.log("User saved to Firestore!");
-            })
-            .catch((error) => {
-                console.error("Error saving user to Firestore:", error);
-            });
-                  
             }
-              // Check if user exists in Firestore
-        const userDocRef = db.collection("users").doc(userInfo.sub);
-        userDocRef.get().then((doc) => {
-            if (doc.exists) {
-                const userData = doc.data();
-
-                // Check if user contains "currentpfp"
-                if (userData.currentpfp) {
-                    console.log("User has currentpfp. Redirecting to main.index...");
-                    window.location.href = "main.index";
-                } else {
-                    console.log("User exists but no currentpfp. Redirecting to upload data...");
-                    uploadUserData(userInfo);
-                }
-            } else {
-                console.log("User does not exist. Uploading user data...");
-                uploadUserData(userInfo);
-            }
-        }).catch((error) => {
-            console.error("Error checking user in Firestore:", error);
-        });
-
         } else {
-            // Redirect back to login if no token is found
             alert("No token found! Redirecting to login.");
-             // Redirect to the partner page
             window.location.href = `index.html`;
         }
-           
-             // Function to upload user data to Firestore
-             function uploadUserData(userInfo) {
-            userDocRef.set({
-                name: userInfo.name,
-                email: userInfo.email,
-                picture: userInfo.picture,
-                id: userInfo.sub,
-                currentpfp: userInfo.picture || null // Add currentpfp if available
-            })
-            .then(() => {
-                console.log("User data uploaded to Firestore!");
-                alert("User data successfully uploaded!");
-                // Redirect to main.index after upload
-                window.location.href = "main.index";
-            })
-            .catch((error) => {
-                console.error("Error uploading user data to Firestore:", error);
-            });
-        }
-
-
     </script>
-    
+</body>
 </html>
