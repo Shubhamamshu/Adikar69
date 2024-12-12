@@ -7,33 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to ADIKAR</title>
     <style>
+        /* General Styles */
         body {
             margin: 0;
-            font-family: 'Courier New', Courier, monospace;
-            background: linear-gradient(to bottom right, #FFDEE9, #B5FFFC); /* Soft pink and blue gradient */
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom right, #FF758C, #FF7EB3); /* Romantic pink gradient */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             color: white;
             text-align: center;
+            overflow: hidden;
         }
 
         .container {
-            width: 350px;
+            width: 90%;
+            max-width: 400px;
             border-radius: 20px;
             padding: 30px;
             background: white;
             color: #333;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             animation: fadeIn 1.5s ease-in-out;
         }
 
         h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            color: #FF6F91; /* Love-themed pink */
-            font-family: 'Georgia', serif;
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #FF4D6D; /* Romantic red */
+            font-family: 'Dancing Script', cursive;
             animation: slideIn 1s ease-out;
         }
 
@@ -42,11 +45,9 @@
             margin-bottom: 25px;
             font-weight: bold;
             color: #555;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Lora', serif;
             animation: bounce 1.5s ease-in-out;
         }
-
-        
 
         .emoji {
             margin-left: 5px;
@@ -54,12 +55,17 @@
 
         .heart {
             font-size: 60px;
-            color: #FF6F91;
+            color: #FF4D6D;
             margin-bottom: 15px;
             animation: heartBeat 1.5s infinite alternate;
         }
 
-        /* Keyframe animations */
+        .g_id_signin button {
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Keyframe Animations */
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
@@ -78,35 +84,47 @@
 
         @keyframes heartBeat {
             0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
+            100% { transform: scale(1.2); }
         }
 
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="heart">❤</div>
         <h1>Welcome to ADIKAR</h1>
-        <p>JOIN ADIKAR AND LET'S CREATE MOMENTS TOGETHER <span class="emoji">💞</span></p>
+        <p>Join Adikar and let's create moments together <span class="emoji">💞</span></p>
         <div id="g_id_onload"
-     data-client_id="260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com"
-     data-login_uri="https://enoughkaran69.github.io/Adikar69/patner.html"
-     data-auto_prompt="false">
-</div>
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="rectangular"
-     data-theme="outline"
-     data-text="sign_in_with"
-     data-size="large"
-     data-logo_alignment="left">
-</div>
-
-
+            data-client_id="260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com"
+            data-login_uri="https://enoughkaran69.github.io/Adikar69/patner.html"
+            data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-shape="rectangular"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-size="large"
+            data-logo_alignment="left">
+        </div>
     </div>
 </body>
 <script>
-function handleCredentialResponse(response) {
+    function handleCredentialResponse(response) {
         if (response.credential) {
             console.log("Encoded JWT ID token: " + response.credential);
 
@@ -129,21 +147,19 @@ function handleCredentialResponse(response) {
         }
     }
 
-  
     window.onload = function() {
-      google.accounts.id.initialize({
-        client_id: "260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com",
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton(
-        document.querySelector(".g_id_signin"), // Specify the container
-        { theme: "outline", size: "large" }    // Customize button style
-      );
-                // Check login status on page load
+        google.accounts.id.initialize({
+            client_id: "260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+            document.querySelector(".g_id_signin"), // Specify the container
+            { theme: "outline", size: "large" }    // Customize button style
+        );
+        // Check login status on page load
         checkLoginStatus();
 
-      google.accounts.id.prompt(); // Optional: Show the One Tap prompt
+        google.accounts.id.prompt(); // Optional: Show the One Tap prompt
     };
-  </script>
-  
+</script>
 </html>
