@@ -134,23 +134,88 @@
             return JSON.parse(jsonPayload);
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token') || localStorage.getItem('google_token');
+               // Retrieve the token from localStorage or query parameters
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('token') || localStorage.getItem('google_token');
 
         if (token) {
+            // Decode the token
             const userInfo = parseJwt(token);
 
+            // Populate user information
             document.getElementById('user-name').textContent = userInfo.name || "User";
             document.getElementById('user-email').textContent = userInfo.email || "N/A";
             document.getElementById('user-id').textContent = userInfo.sub || "N/A";
 
             if (userInfo.picture) {
                 document.getElementById('user-picture').src = userInfo.picture;
+                        // Save user to Firestore
+        db.collection("users")
+            .doc(userInfo.sub)
+            .set({
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+                id: userInfo.sub
+            })
+            .then(() => {
+                console.log("User saved to Firestore!");
+            })
+            .catch((error) => {
+                console.error("Error saving user to Firestore:", error);
+            });
+                  
             }
+              // Check if user exists in Firestore
+        const userDocRef = db.collection("users").doc(userInfo.sub);
+        userDocRef.get().then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+
+                // Check if user contains "currentpfp"
+                if (userData.currentpfp) {
+                    console.log("User has currentpfp. Redirecting to main.index...");
+                    window.location.href = "main.index";
+                } else {
+                    console.log("User exists but no currentpfp. Redirecting to upload data...");
+                    uploadUserData(userInfo);
+                }
+            } else {
+                console.log("User does not exist. Uploading user data...");
+                uploadUserData(userInfo);
+            }
+        }).catch((error) => {
+            console.error("Error checking user in Firestore:", error);
+        });
+
         } else {
+            // Redirect back to login if no token is found
             alert("No token found! Redirecting to login.");
+             // Redirect to the partner page
             window.location.href = `index.html`;
         }
+           
+             // Function to upload user data to Firestore
+             function uploadUserData(userInfo) {
+            userDocRef.set({
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+                id: userInfo.sub,
+                currentpfp: userInfo.picture || null // Add currentpfp if available
+            })
+            .then(() => {
+                console.log("User data uploaded to Firestore!");
+                alert("User data successfully uploaded!");
+                // Redirect to main.index after upload
+                window.location.href = "main.index";
+            })
+            .catch((error) => {
+                console.error("Error uploading user data to Firestore:", error);
+            });
+        }
+
+
     </script>
 </body>
 </html>
