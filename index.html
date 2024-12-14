@@ -192,12 +192,221 @@
             return JSON.parse(jsonPayload);
         }
      // Check Login Status
-        function checkLoginStatus() {
-            const token = localStorage.getItem('google_tokin');
-            if (token) {
-                window.location.href = `patner.html?token=${token}`;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to ADIKAR</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom right, #FF758C, #FF7EB3); /* Romantic pink gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 30px;
+            background: white;
+            color: #333;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #FF4D6D; /* Romantic red */
+            font-family: 'Dancing Script', cursive;
+            animation: slideIn 1s ease-out;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            color: #555;
+            font-family: 'Lora', serif;
+            animation: bounce 1.5s ease-in-out;
+        }
+
+        .emoji {
+            margin-left: 5px;
+        }
+
+        .heart {
+            font-size: 60px;
+            color: #FF4D6D;
+            margin-bottom: 15px;
+            animation: heartBeat 1.5s infinite alternate;
+        }
+
+        .g_id_signin button {
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(10px); opacity: 0; }
+            50% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 20px;
             }
         }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart">❤</div>
+        <h1>Welcome to ADIKAR</h1>
+        <p>Join Adikar and let's create moments together <span class="emoji">💞</span></p>
+        <div>
+<button id="google-signin-button">Sign in with Google
+        </button>
+        </div>
+    </div>
+</body>
+<script>
+     // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXtmiQ1Uf5Did8BKVJov3KKj9XdOQhW2c",
+            authDomain: "talk-to-13b66.firebaseapp.com",
+            projectId: "talk-to-13b66",
+            storageBucket: "talk-to-13b66.appspot.com",
+            messagingSenderId: "925074718284",
+            appId: "1:925074718284:web:1a65224802c4e3db96bee9",
+            measurementId: "G-6X72JLJ6PR"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Reference to Firebase Authentication
+        const auth = firebase.auth();
+
+    
+     // Google Sign-In
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+        document.getElementById('google-signin-button').addEventListener('click', () => {
+            auth.signInWithPopup(googleProvider)
+                .then((result) => {
+                    // User is signed in
+                    const user = result.user;
+                    console.log('User Info:', user);
+
+                    // Save token to localStorage
+                    user.getIdToken().then((token) => {
+                        localStorage.setItem('google_tokin', token);
+                        // Redirect to the partner page
+                         const userInfo = parseJwt(token);
+                        // Populate user information
+            document.getElementById('user-name').textContent = userInfo.name || "User";
+            document.getElementById('user-email').textContent = userInfo.email || "N/A";
+            document.getElementById('user-id').textContent = userInfo.sub || "N/A";
+
+            if (userInfo.picture) {
+                document.getElementById('user-picture').src = userInfo.picture;
+                        // Save user to Firestore
+        db.collection("users")
+            .doc(userInfo.sub)
+            .set({
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+                id: userInfo.sub
+            })
+            .then(() => {
+                console.log("User saved to Firestore!");
+                window.location.href = "patner.html";
+            })
+            .catch((error) => {
+                console.error("Error saving user to Firestore:", error);
+            });
+                  
+            }
+   
+                    });
+                })
+                .catch((error) => {
+                    console.error('Sign-in Error:', error);
+                });
+        });
+    function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+     // Check Login Status
+ function checkLoginStatus() {
+    const token = localStorage.getItem('google_tokin');
+    if (token) {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("User is authenticated:", user.email);
+                window.location.href = `partner.html?token=${token}`;
+            } else {
+                console.log("No user session found. Redirecting to login.");
+                localStorage.removeItem('google_tokin');
+            }
+        });
+    }
+}
+
+        // Run login check on page load
+        window.onload = checkLoginStatus;
+    
+</script>
+</html>
+
 
         // Run login check on page load
         window.onload = checkLoginStatus;
