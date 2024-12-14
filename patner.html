@@ -142,10 +142,20 @@ const firebaseConfig = {
     firebase.initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
     const db = firebase.firestore();
+        const auth = firebase.auth();
 
-               // Retrieve the token from localStorage or query parameters
-const urlParams = new URLSearchParams(window.location.search);
-const token = localStorage.getItem('google_tokin');
+// Check if a user is logged in
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // User is logged in
+        console.log("User is logged in:", user);
+
+        // Display user info on the page
+        document.getElementById('user-name').textContent = user.displayName || "Anonymous";
+        document.getElementById('user-picture').src = user.photoURL || "default-avatar.png";
+        document.getElementById('id').textContent = user.userInfo.sub || "Unknown";
+
+
 
  
      
@@ -173,12 +183,17 @@ const token = localStorage.getItem('google_tokin');
         });
 
         } else {
-            // Redirect back to login if no token is found
-            alert("No token found! Redirecting to login.");
-             // Redirect to the partner page
-            window.location.href = `index.html`;
-        }
-           
+            // User is not logged in, redirect to login
+        console.log("No user logged in. Redirecting to login...");
+        alert("No user session found! Redirecting to login.");
+        window.location.href = "index.html";
+    }
+     }).catch((error) => {
+            console.error("Error checking user in Firestore:", error);
+        });
+    
+        
+       
           
     </script>
 </body>
