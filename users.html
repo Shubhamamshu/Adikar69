@@ -171,6 +171,7 @@
             .then(() => {
                 alert("User successfully added as your partner!");
                 console.log(`User with UID ${selectedUserUid} added to currentpfp.`);
+                 window.location.href = "main.html";
             })
             .catch((error) => {
                 console.error("Error updating currentpfp:", error);
