@@ -201,7 +201,7 @@
         auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log("User is authenticated:", user.email);
-                window.location.href = `partner.html?token=${token}`;
+                window.location.href = `patner.html`;
             } else {
                 console.log("No user session found. Redirecting to login.");
                 localStorage.removeItem('google_tokin');
