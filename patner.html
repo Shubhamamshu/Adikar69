@@ -162,7 +162,7 @@ auth.onAuthStateChanged((user) => {
  
      
               // Check if user exists in Firestore
-        const userDocRef = db.collection("users").doc(uid);
+        const userDocRef = db.collection("users").doc(user.uid);
         userDocRef.get().then((doc) => {
             if (doc.exists) {
                 const userData = doc.data();
