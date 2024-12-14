@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -95,55 +96,88 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
+         const auth = firebase.auth();
+    // Authenticate user and fetch users from Firestore
+    auth.onAuthStateChanged((currentUser) => {
+        if (currentUser) {
+            console.log("User logged in:", currentUser);
         // Fetch all users from Firestore
-        db.collection("users").get().then((querySnapshot) => {
-            const userList = document.getElementById("user-list");
+      // Fetch all users from Firestore excluding the current user
+            db.collection("users")
+                .get()
+                .then((querySnapshot) => {
+                    const userList = document.getElementById("user-list");
+                    userList.innerHTML = ""; // Clear previous entries
 
-            querySnapshot.forEach((doc) => {
-                const user = doc.data();
+                    querySnapshot.forEach((doc) => {
+                        const user = doc.data();
 
-                // Create user card
-                const userCard = document.createElement("div");
-                userCard.classList.add("user-card");
+                        // Skip the currently logged-in user
+                        if (doc.id === currentUser.uid) return;
 
-                // User info container
-                const userInfo = document.createElement("div");
-                userInfo.classList.add("user-info");
+                        // Create user card
+                        const userCard = document.createElement("div");
+                        userCard.classList.add("user-card");
 
-                // User image
-                const userImage = document.createElement("img");
-                userImage.classList.add("user-image");
-                userImage.src = user.picture || "https://via.placeholder.com/50";
-                userImage.alt = `${user.name}'s profile picture`;
 
-                // User name
-                const userName = document.createElement("div");
-                userName.classList.add("user-name");
-                userName.textContent = user.name || "Unknown User";
+                       // User info container
+                        const userInfo = document.createElement("div");
+                        userInfo.classList.add("user-info");
 
-                userInfo.appendChild(userImage);
-                userInfo.appendChild(userName);
+                        // User image
+                        const userImage = document.createElement("img");
+                        userImage.classList.add("user-image");
+                        userImage.src = user.picture || "https://via.placeholder.com/50";
+                        userImage.alt = `${user.name || "Unknown User"}'s profile picture`;
 
-                // Join button
-                const joinButton = document.createElement("button");
-                joinButton.classList.add("join-button");
-                joinButton.textContent = "Join";
-                joinButton.onclick = () => {
-                    alert(`Joining ${user.name || "this user"}!`);
-                    // Add your join logic here
-                };
+                        // User name
+                        const userName = document.createElement("div");
+                        userName.classList.add("user-name");
+                        userName.textContent = user.name || "Unknown User";
 
+                      userInfo.appendChild(userImage);
+                        userInfo.appendChild(userName);
+
+                        // Join button
+                        const joinButton = document.createElement("button");
+                        joinButton.classList.add("join-button");
+                        joinButton.textContent = "Join";
+                        joinButton.onclick = () => {
+                            addCurrentPfp(currentUser.uid, doc.id);
+                        };
+
+                        // Append user info and button to card
+                        userCard.appendChild(userInfo);
+                        userCard.appendChild(joinButton);
                 // Append user info and button to card
-                userCard.appendChild(userInfo);
-                userCard.appendChild(joinButton);
-
                 // Append card to the user list
-                userList.appendChild(userCard);
+                        userList.appendChild(userCard);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching users:", error);
+                });
+        } else {
+            console.log("No user logged in. Redirecting to login...");
+            window.location.href = "index.html";
+        }
+    });
+           // Function to add the selected user's UID to the current user's Firestore document
+    function addCurrentPfp(currentUserUid, selectedUserUid) {
+        const currentUserDocRef = db.collection("users").doc(currentUserUid);
+
+        currentUserDocRef
+            .update({ currentpfp: selectedUserUid })
+            .then(() => {
+                alert("User successfully added as your partner!");
+                console.log(`User with UID ${selectedUserUid} added to currentpfp.`);
+            })
+            .catch((error) => {
+                console.error("Error updating currentpfp:", error);
+                alert("Failed to add partner. Please try again.");
             });
-        }).catch((error) => {
-            console.error("Error fetching users:", error);
-        });
+    }
+
     </script>
 </body>
 </html>
