@@ -155,14 +155,14 @@ auth.onAuthStateChanged((user) => {
         // Display user info on the page
         document.getElementById('user-name').textContent = user.displayName || "Anonymous";
         document.getElementById('user-picture').src = user.photoURL || "default-avatar.png";
-        document.getElementById('id').textContent = user.userInfo.sub || "Unknown";
+        document.getElementById('id').textContent = user.uid || "Unknown";
 
 
 
  
      
               // Check if user exists in Firestore
-        const userDocRef = db.collection("users").doc(userInfo.sub);
+        const userDocRef = db.collection("users").doc(uid);
         userDocRef.get().then((doc) => {
             if (doc.exists) {
                 const userData = doc.data();
