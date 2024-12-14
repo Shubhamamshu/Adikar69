@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,58 +110,61 @@
         <div class="heart">❤</div>
         <h1>Welcome to ADIKAR</h1>
         <p>Join Adikar and let's create moments together <span class="emoji">💞</span></p>
-        <div id="g_id_onload"
-            data-client_id="260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com"
-            data-login_uri="https://enoughkaran69.github.io/Adikar69/patner.html"
-            data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin"
-            data-type="standard"
-            data-shape="rectangular"
-            data-theme="outline"
-            data-text="sign_in_with"
-            data-size="large"
-            data-logo_alignment="left">
+        <div>
+<button id="google-signin-button">Sign in with Google
+        </button>
         </div>
     </div>
 </body>
 <script>
-    function handleCredentialResponse(response) {
-        if (response.credential) {
-            console.log("Encoded JWT ID token: " + response.credential);
+     // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXtmiQ1Uf5Did8BKVJov3KKj9XdOQhW2c",
+            authDomain: "talk-to-13b66.firebaseapp.com",
+            projectId: "talk-to-13b66",
+            storageBucket: "talk-to-13b66.appspot.com",
+            messagingSenderId: "925074718284",
+            appId: "1:925074718284:web:1a65224802c4e3db96bee9",
+            measurementId: "G-6X72JLJ6PR"
+        };
 
-            // Save token in localStorage (or sessionStorage/cookies)
-            localStorage.setItem('google_token', response.credential);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-            // Redirect to the partner page
-            window.location.href = `patner.html?token=${response.credential}`;
-        } else {
-            console.error("Sign-In failed. No credential received.");
-        }
-    }
+        // Reference to Firebase Authentication
+        const auth = firebase.auth();
 
-    function checkLoginStatus() {
-        // Check if the user is already logged in
-        const token = localStorage.getItem('google_token');
-        if (token) {
-            // User is already logged in, redirect them
-            window.location.href = `patner.html?token=${token}`;
-        }
-    }
+    
+     // Google Sign-In
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-    window.onload = function() {
-        google.accounts.id.initialize({
-            client_id: "260745731657-1achptdp5umus9sr89tpshuit5t4equu.apps.googleusercontent.com",
-            callback: handleCredentialResponse
+        document.getElementById('google-signin-button').addEventListener('click', () => {
+            auth.signInWithPopup(googleProvider)
+                .then((result) => {
+                    // User is signed in
+                    const user = result.user;
+                    console.log('User Info:', user);
+
+                    // Save token to localStorage
+                    user.getIdToken().then((token) => {
+                        localStorage.setItem('google_token', token);
+                        // Redirect to the partner page
+                        window.location.href = `patner.html?token=${token}`;
+                    });
+                })
+                .catch((error) => {
+                    console.error('Sign-in Error:', error);
+                });
         });
-        google.accounts.id.renderButton(
-            document.querySelector(".g_id_signin"), // Specify the container
-            { theme: "outline", size: "large" }    // Customize button style
-        );
-        // Check login status on page load
-        checkLoginStatus();
+     // Check Login Status
+        function checkLoginStatus() {
+            const token = localStorage.getItem('google_token');
+            if (token) {
+                window.location.href = `patner.html?token=${token}`;
+            }
+        }
 
-        google.accounts.id.prompt(); // Optional: Show the One Tap prompt
-    };
+        // Run login check on page load
+        window.onload = checkLoginStatus;
 </script>
 </html>
