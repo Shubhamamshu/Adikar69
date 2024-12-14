@@ -154,6 +154,7 @@
                         localStorage.setItem('google_tokin', token);
                         // Redirect to the partner page
                          const userInfo = parseJwt(token);
+                        checkLoginStatus();
                         // Populate user information
             document.getElementById('user-name').textContent = userInfo.name || "User";
             document.getElementById('user-email').textContent = userInfo.email || "N/A";
@@ -162,21 +163,7 @@
             if (userInfo.picture) {
                 document.getElementById('user-picture').src = userInfo.picture;
                         // Save user to Firestore
-        db.collection("users")
-            .doc(userInfo.sub)
-            .set({
-                name: userInfo.name,
-                email: userInfo.email,
-                picture: userInfo.picture,
-                id: userInfo.sub
-            })
-            .then(() => {
-                console.log("User saved to Firestorre!");
-                window.location.href = "patner.html";
-            })
-            .catch((error) => {
-                console.error("Error saving user to Firestore:", error);
-            });
+
                   
             }
    
@@ -201,7 +188,23 @@
         auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log("User is authenticated:", user.email);
+                        db.collection("users")
+            .doc(user.uid)
+            .set({
+                name: user.name,
+                email: user.email,
+                picture: user.picture,
+                id: useruid.sub
+            })
+            .then(() => {
+                console.log("User saved to Firestorre!");
                 window.location.href = `patner.html`;
+     
+            })
+            .catch((error) => {
+                console.error("Error saving user to Firestore:", error);
+            });
+                
             } else {
                 console.log("No user session found. Redirecting to login.");
                 localStorage.removeItem('google_tokin');
@@ -211,6 +214,7 @@
 }
 
         // Run login check on page load
+window.onload(checkLoginStatus);
 
     
 </script>
