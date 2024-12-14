@@ -162,6 +162,7 @@
                     })
                     .then(() => {
                         console.log("User saved to Firestore!");
+                                        window.location.href = `patner.html`;
                    
                     })
                     .catch((error) => {
@@ -181,6 +182,7 @@
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     console.log("User is authenticated:", user.email);
+                                              window.location.href = `patner.html`;
           
                 } else {
                     console.log("No user session found. Redirecting to login.");
